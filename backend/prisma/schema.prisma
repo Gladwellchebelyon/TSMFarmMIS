@@ -2,6 +2,7 @@ generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
+
 datasource db {
   provider = "postgresql"
 }
@@ -10,13 +11,35 @@ model User {
   id          Int      @id @default(autoincrement())
   fullName    String
   email       String   @unique
-  
   password    String
   role        Role
   phone       String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  activityLogs ActivityLog[]
+}
+
+model ActivityLog {
+  id          Int            @id @default(autoincrement())
+
+  action      String
+  module      String
+  description String
+
+  severity    Severity       @default(INFO)
+  status      ActivityStatus @default(SUCCESS)
+
+  comment     String?
+
+  ipAddress   String?
+  device      String?
+
+  createdAt   DateTime       @default(now())
+
+  userId      Int
+  user        User           @relation(fields: [userId], references: [id])
 }
 
 enum Role {
@@ -25,4 +48,17 @@ enum Role {
   SUPERVISOR
   STOREKEEPER
   ACCOUNTANT
+}
+
+enum Severity {
+  INFO
+  NOTICE
+  WARNING
+  CRITICAL
+}
+
+enum ActivityStatus {
+  SUCCESS
+  FAILED
+  PENDING
 }
