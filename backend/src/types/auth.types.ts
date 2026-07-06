@@ -1,0 +1,13 @@
+export interface LoginDTO {
+    email: string;
+    password: string;
+  }
+  
+  export interface RegisterDTO {
+    fullName: string;
+    email: string;
+    password: string;
+    role: string;
+    phone?: string;
+  }
+  
