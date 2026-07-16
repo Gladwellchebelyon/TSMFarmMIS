@@ -13,6 +13,9 @@ export const authenticate = (
   res: Response,
   next: NextFunction
 ) => {
+  // Debug logs
+  console.log("Authorization Header:", req.headers.authorization);
+
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -21,7 +24,15 @@ export const authenticate = (
     });
   }
 
+  if (!authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({
+      error: "Invalid authorization format.",
+    });
+  }
+
   const token = authHeader.split(" ")[1];
+
+  console.log("Extracted Token:", token);
 
   if (!token) {
     return res.status(401).json({
@@ -35,10 +46,14 @@ export const authenticate = (
       role: string;
     };
 
+    console.log("Decoded Token:", decoded);
+
     req.user = decoded;
 
     next();
   } catch (error) {
+    console.error("JWT Verification Error:", error);
+
     return res.status(401).json({
       error: "Invalid or expired token.",
     });

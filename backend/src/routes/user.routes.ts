@@ -1,7 +1,10 @@
 import { Router } from "express";
 import {
   getUsers,
+  getUser,
   createNewUser,
+  updateExistingUser,
+  changeUserStatus,
 } from "../controllers/user.controller";
 
 import { authenticate } from "../middleware/auth.middleware";
@@ -18,12 +21,36 @@ router.get(
   getUsers
 );
 
-// Create new staff (Admin only)
+// View single user (Admin only)
+router.get(
+  "/:id",
+  authenticate,
+  authorize(UserRole.ADMIN),
+  getUser
+);
+
+// Create user (Admin only)
 router.post(
   "/",
   authenticate,
   authorize(UserRole.ADMIN),
   createNewUser
+);
+
+// Update user (Admin only)
+router.put(
+  "/:id",
+  authenticate,
+  authorize(UserRole.ADMIN),
+  updateExistingUser
+);
+
+// Activate / Deactivate user (Admin only)
+router.patch(
+  "/:id/status",
+  authenticate,
+  authorize(UserRole.ADMIN),
+  changeUserStatus
 );
 
 export default router;
