@@ -3,6 +3,7 @@ import cors from "cors";
 
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
+import farmRoutes from "./routes/farm.routes";
 
 import { authenticate, AuthRequest } from "./middleware/auth.middleware";
 import { authorize } from "./middleware/role.middleware";
@@ -20,11 +21,19 @@ app.get("/", (req, res) => {
   });
 });
 
-// Routes
+// =======================
+// API Routes
+// =======================
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/farms", farmRoutes);
 
-// Protected profile route
+// =======================
+// Protected Routes
+// =======================
+
+// Logged-in users
 app.get("/api/profile", authenticate, (req: AuthRequest, res) => {
   res.status(200).json({
     message: "Access granted!",
@@ -32,7 +41,7 @@ app.get("/api/profile", authenticate, (req: AuthRequest, res) => {
   });
 });
 
-// Admin-only route
+// Admin only
 app.get(
   "/api/admin",
   authenticate,

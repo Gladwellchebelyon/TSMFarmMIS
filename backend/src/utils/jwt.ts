@@ -2,6 +2,8 @@ import jwt, { Secret, SignOptions } from "jsonwebtoken";
 
 const JWT_SECRET: Secret = process.env.JWT_SECRET || "default_secret";
 
+console.log("JWT_SECRET =", JWT_SECRET);
+
 export const generateToken = (
   userId: number,
   role: string

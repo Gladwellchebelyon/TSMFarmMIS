@@ -13,10 +13,9 @@ export const authenticate = (
   res: Response,
   next: NextFunction
 ) => {
-  // Debug logs
-  console.log("Authorization Header:", req.headers.authorization);
-
   const authHeader = req.headers.authorization;
+
+  console.log("Authorization Header:", JSON.stringify(authHeader));
 
   if (!authHeader) {
     return res.status(401).json({
@@ -24,13 +23,18 @@ export const authenticate = (
     });
   }
 
-  if (!authHeader.startsWith("Bearer ")) {
+  if (!authHeader.startsWith("Bearer")) {
     return res.status(401).json({
       error: "Invalid authorization format.",
     });
   }
 
-  const token = authHeader.split(" ")[1];
+  const parts = authHeader.split(" ");
+
+  console.log("Parts:", parts);
+  console.log("Parts Length:", parts.length);
+
+  const token = parts.filter((part) => part.trim() !== "").pop();
 
   console.log("Extracted Token:", token);
 
